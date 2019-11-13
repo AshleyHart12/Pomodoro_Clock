@@ -1,5 +1,9 @@
-.App {
+body {
   justify-content: center;
+}
+
+#pointer {
+  cursor: pointer;
 }
 
 #labels-container {
@@ -13,23 +17,16 @@
   margin-left: 0px;
  }
 
-#break-label-elements {
+#break-label-elements, #session-label-elements {
   display: grid;
   grid-template-columns: 15% 15% 15%;
   justify-content: center;
-  cursor: pointer;
 }
 
 #session-label {
   width: 200px;
  }
 
-#session-label-elements {
-  display: grid;
-  grid-template-columns: 15% 15% 15%;
-  justify-content: center;
-  cursor: pointer;
-}
 
 #timer-label {
   border: 2px solid;

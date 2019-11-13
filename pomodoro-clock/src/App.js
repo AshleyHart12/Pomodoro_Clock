@@ -6,17 +6,18 @@ class App extends React.Component {
     state = {
       breakLength: '5',
       sessionLength: '25',
-      session: 'mm:ss'
+      session: '25:00',
+      timerTime: 0,
+      timerOn: false,
+      seconds: 1800000 / 1000
     }
   
-
-
 
   resetClock(){
     this.setState({
       breakLength: '5',
       sessionLength: '25',
-      session: 'mm:ss'
+      session: '25:00',
     })
   }
 
@@ -44,6 +45,35 @@ class App extends React.Component {
     })
   }
 
+  getSeconds() {
+    return ("0" + Math.floor(this.state.seconds % 60)).slice(-2);
+  }
+
+  getMinutes() {
+    return ("0" + Math.floor(this.state.seconds % 3600 / 60)).slice(-2)
+  }
+
+  startCounter() {
+    this.timer = setInterval(() => {
+      this.setState({
+      seconds: this.state.seconds -1            
+        });
+    }, 1000);  
+  };
+
+  StopCounter(){
+    clearInterval(this.timer);
+    this.setState({
+      timerOn: false
+    });
+  };
+
+  resetCounter(){
+      this.setState({
+        timerTime: this.state.session
+      })
+  };
+
 
   render() {
   return (
@@ -57,18 +87,18 @@ class App extends React.Component {
       <div id="break-label">
       <h5>Break Length</h5>
         <div id="break-label-elements">
-        <p id="break-decrement" onClick={this.decrementBreak}>-</p>
+        <p id="break-decrement pointer" onClick={this.decrementBreak}>-</p>
         <p id="break-number">{this.state.breakLength}</p>
-        <p id="break-increment" onClick={this.incrementBreak}>+</p>
+        <p id="break-increment pointer" onClick={this.incrementBreak}>+</p>
         </div>
       </div>
 
       <div id="session-label">
       <h5>Session Length</h5>
         <div id="session-label-elements">
-        <p id="session-decrement" onClick={this.decrementSession}>-</p>
+        <p id="session-decrement pointer" onClick={this.decrementSession}>-</p>
         <p id="session-number">{this.state.sessionLength}</p>
-        <p id="session-increment" onClick={this.incrementSession}>+</p>
+        <p id="session-increment pointer" onClick={this.incrementSession}>+</p>
         </div>
       </div>
       </div>
@@ -76,19 +106,20 @@ class App extends React.Component {
       <div id="timer-label">
         <h4>Session</h4>
         <div id="time-left">
-          <p>{this.state.session}</p>
+          {this.getMinutes()} : {this.getSeconds()}
         </div>
       </div>
 
       <div id="controls">
-        <button id="start-stop">Start/Stop</button>
-        <button id="reset" onClick={() => this.resetClock()}>Reset</button>
+        <button onClick={() => this.startCounter()}>Start</button>
+        <button onClick={() => this.StopCounter()}>Stop</button>
+        <button onClick={() => this.resetCounter()}>Reset</button>
       </div>
-
 
     </div>
   );
   }
+  
 }
 
 export default App;

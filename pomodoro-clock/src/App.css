@@ -1,41 +1,115 @@
 body {
+  font-family: 'Georgia, serif';
+}
+
+.App {
+  text-align: center;
+}
+
+
+/* POMODORO CLOCK HEADING */
+
+
+#rainbowHeader {
+  text-align: center;
+  justify-content: center;
+  font-size: 50px;
+  margin: 30px;
+  background: linear-gradient(to left, violet, violet, indigo, violet, violet);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  font-weight: 600;
+}
+
+/* BREAK AND SESSION LABELS AND BUTTONS */
+#labelsContainer {
+  display: inline-flex;
+  margin: 10px;
+  text-align: center;
+}
+
+#labelHeader label {
+  font-weight: 700;
+  display: flex;
+  padding: 20px;
+}
+
+#labelHeader button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  outline: none;
+  background-color: black;
+  color: white;
+  border-radius: 5px;
+  box-shadow: 7 2px #999;
+  margin: 10px;
+  padding: 10px;
+}
+
+#labelHeader button:active {
+  box-shadow: 5px 8px 10px #888888;
+  transform: translateY(4px);
+}
+
+#break-label, #session-label {
+ display: inline-flex;
+ justify-content: center;
+ align-items: center;
+ }
+
+
+/* START/STOP/RESET BUTTONS */
+#controls {
+  display: flex;
   justify-content: center;
 }
 
-#pointer {
+#controls button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border: 1px solid pink;
   cursor: pointer;
+  outline: none;
+  margin: 3px;
+  font-size: 15px;
 }
 
-#labels-container {
-  display: inline;
-  padding: 20px;
+#controls button:hover {
+  background-color: pink;
+}
+
+
+/* MAIN TIMER DISPLAY - SESSION: TIME */
+#timerContent {
+  /* border: 3px solid black;
+  border-radius: 50%; */
+  margin-bottom: -30px;
+  margin-top: -30px;
+  /* padding: 10px; */
+  width: 250px;
+  font-size: 25px;
+  height: 270px;
+  justify-content: center;
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  background-image: url("https://dejpknyizje2n.cloudfront.net/svgcustom/clipart/preview/cat-head-3430-14554-300x300.png");
+  color: white;
+  background-repeat: no-repeat;
+  background-size: 250px 250px;
+}
+
+#timer {
+  justify-content: center;
   display: flex;
 }
 
-#break-label {
-  width: 200px;
-  margin-left: 0px;
- }
-
-#break-label-elements, #session-label-elements {
-  display: grid;
-  grid-template-columns: 15% 15% 15%;
-  justify-content: center;
-}
-
-#session-label {
-  width: 200px;
- }
-
-
-#timer-label {
-  border: 2px solid;
-  border-radius: 25px;
-  width: 20vw;
+#timer span {
   text-align: center;
-  margin: 10px;
 }
-
 
 
 

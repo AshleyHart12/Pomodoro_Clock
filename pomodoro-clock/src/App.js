@@ -1,24 +1,41 @@
 import React from 'react';
 import './App.css';
 
-const sound ='';
+const formatTime = (timeLeftInSecond) => {
+  let minute = Math.floor(timeLeftInSecond / 60);
+  if (minute < 10) minute = '0' + minute;
+
+  let second = timeLeftInSecond - 60 * minute;
+  if (second < 10) second = '0' + second;
+
+  return `${minute}:${second}`;
+}
+
 
 class App extends React.Component {
   constructor(props){
     super(props)
+
+    this.audioBeep = React.createRef();
+
     this.state = {
       breakLength: 5,
       sessionLength: 25,
+      timerName: 'Session',
       timerOn: false,
-      minutes: 25,
-      seconds: 0,
-      intervalId: 0
+      timeLeft: Number.parseInt(25, 10) * 60,
+      timerInterval: null
     };
-    // this.handleClick = this.handleClick.bind(this);
+    this.decrementBreak = this.decrementBreak.bind(this);
+    this.decrementSession = this.decrementSession.bind(this);
+    this.incrementBreak = this.incrementBreak.bind(this);
+    this.incrementSession = this.incrementSession.bind(this);
+    this.resetCounter = this.resetCounter.bind(this);
+    this.handleStart = this.handleStart.bind(this);
   }
   
 decrementBreak(){
-  if (this.state.breakLength > 1){
+  if (this.state.breakLength > 1 && !this.state.timerOn){
     this.setState({
       breakLength: this.state.breakLength - 1
     })
@@ -26,7 +43,7 @@ decrementBreak(){
 };
 
 incrementBreak(){
-  if (this.state.breakLength < 60) {
+  if (this.state.breakLength < 60 && !this.state.timerOn) {
     this.setState({
     breakLength: this.state.breakLength + 1
     })
@@ -34,91 +51,97 @@ incrementBreak(){
 };
 
 decrementSession(){
-  if (this.state.sessionLength > 1) {
-    this.setState(({minutes, sessionLength}) => ({
-      minutes: minutes - 1,
+  if (this.state.sessionLength > 1 && !this.state.timerOn) {
+    this.setState(({sessionLength}) => ({
+      timeLeft: this.state.timeLeft - 1 * 60,
       sessionLength: sessionLength - 1
     }))
   }
 };
 
 incrementSession(){
-  if (this.state.sessionLength < 60) {
-    this.setState(({minutes, sessionLength}) => ({
-      minutes: minutes + 1,
+  if (this.state.sessionLength < 60 && !this.state.timerOn) {
+    this.setState(({sessionLength}) => ({
+      timeLeft: this.state.timeLeft + 1 * 60,
       sessionLength: sessionLength + 1
     }))
   }
 };
 
-getSeconds(){
- if (this.state.seconds > 0) {
-  return ("0" + Math.floor(this.state.seconds % 60)).slice(-2);
- }
-};
-
-getMinutes() {
-  if(this.state.seconds > 0) {
-    return ("0" + Math.floor(this.state.seconds % 3600 / 60)).slice(-2)
-  }
-};
-
-playAudio(){
-  sound = new sound("http://mattersofgrey.com/audio/Minecraft-meow2.mp3")  
+decreaseTimer(){
+  this.setState({
+    timeLeft: this.state.timeLeft -1
+  })
 }
 
 handleStart(){
-    this.timer = setInterval(() => {
-      const { seconds, minutes } = this.state
+  if (!this.state.timerOn){
+    this.setState({
+      timerOn: true,
+      timerInterval: setInterval(() => {
+      this.decreaseTimer();
+       this.phaseControl();
+      }, 1000)
+    })
+  } else {
+    this.audioBeep.current.pause();
+    this.audioBeep.current.currentTime = 0;
+    this.state.timerInterval && clearInterval (this.state.timerInterval);
 
-      if (seconds > 0) {
-        this.setState(({seconds}) => ({
-          seconds: seconds - 1
-        }))
-      }
-      if (seconds === 0) {
-        if (minutes === 0){   
-          clearInterval(this.myInterval);
-          this.playAudio()
-        } else {
-          this.setState(({minutes}) => ({
-            minutes: minutes - 1,
-            seconds: 59
-          }))
-        }
-      }
-    }, 1000)
-    };
+    this.setState({
+      timerOn: false,
+      timerInterval: null
+    });
+  }
+}
 
-  handleStop(){
-    clearInterval(this.timer);
+phaseControl(){
+  if (this.state.timeLeft === 0) {
+    this.audioBeep.current.play();
+  } else if (this.state.timeLeft === -1) {
+    if (this.state.timerName === 'Session'){
+      this.setState({
+        timerName: 'Break',
+        timeLeft: this.state.breakLength * 60
+      });
+    } else {
+      this.setState({
+        timerName: 'Session',
+        timeLeft: this.state.sessionLength * 60
+      });
     }
+  }
+}
+  
 
 resetCounter(){
-  clearInterval(this.timer);
+  this.audioBeep.current.pause();
+   this.audioBeep.current.currentTime = 0;
+   this.state.timerInterval && clearInterval(this.state.timerInterval);
+  clearInterval (this.state.timerInterval);
     this.setState({
-      minutes: 25,
-      seconds: 0,
-      timerOn: false,
       breakLength: 5,
       sessionLength: 25,
       intervalId: 0,
-      buttonText: "Start"
-    })
+      timerName: 'Session',
+      timerOn: false,
+      timeLeft: Number.parseInt(25, 10) * 60
+    });
+   
 };
 
 
 render() {
-const { minutes, seconds } = this.state
 
 return (
   <div className="App">
-
  
     <div id="titleHeader">
       <p id="rainbowHeader">Pomodoro Clock
         </p>
       </div>
+
+      <div className="displayOutline">
 
 
   {/* BREAK AND SESSION LENGTHS + BUTTONS */}
@@ -144,9 +167,9 @@ return (
 
     {/* MAIN TIMER DISPLAY */}
     <div id="timer">
-      <div id="timerContent" >
-        <label id="timer-label">Session</label>
-        <span id="time-left">{minutes} : {seconds < 10 ? `0${seconds}` : seconds}</span>
+       <div id="timerContent"> 
+        <label id="timer-label">{this.state.timerName}</label>
+        <span id="time-left">{formatTime(this.state.timeLeft)}</span>
       </div>
     </div>
 
@@ -155,16 +178,19 @@ return (
   {/* START/STOP/RESET BUTTONS */}
     <div id="controls">     
      
-      <button id="start_stop" onClick={()=> this.handleStart(console.log("clicked"))}>Start</button>
-      <button id="start_stop" onClick={()=> this.handleStop(console.log("clicked"))}>Stop</button>
+      <button id="start_stop" onClick={()=> this.handleStart(console.log("clicked"))}>{this.state.timerOn ? 'Stop' : 'Start'}</button>
+
+      {/* <button id="start_stop" onClick={()=> this.handleStop(console.log("clicked"))}>Stop</button> */}
  
       <button id="reset" onClick={() => this.resetCounter()}>Reset</button>
     </div>
+    </div>
 
-  </div>
-);
-}
+    <audio id="beep" src="https://goo.gl/65cBl1" ref={this.audioBeep} />
 
+    </div>
+    );
+  }
 }
 
 export default App;

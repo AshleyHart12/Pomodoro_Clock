@@ -6,10 +6,17 @@ body {
   text-align: center;
 }
 
+.displayOutline {
+  position: fixed;
+  left: 50%;
+  margin-left: -10em;
+  border: solid;
+  border-style: outset;
+  width: 330px;
+  height: 70vh;
+}
 
 /* POMODORO CLOCK HEADING */
-
-
 #rainbowHeader {
   text-align: center;
   justify-content: center;
@@ -100,6 +107,25 @@ body {
   color: white;
   background-repeat: no-repeat;
   background-size: 250px 250px;
+}
+
+#breakContent {
+    /* border: 3px solid black;
+    border-radius: 50%; */
+    margin-bottom: -30px;
+    margin-top: -30px;
+    /* padding: 10px; */
+    width: 250px;
+    font-size: 25px;
+    height: 270px;
+    justify-content: center;
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    background-image: url("https://i.pinimg.com/originals/b0/3d/f2/b03df220fc90ad9ec809ad80b6484a52.jpg");
+    color: white;
+    background-repeat: no-repeat;
+    background-size: 250px 250px;
 }
 
 #timer {

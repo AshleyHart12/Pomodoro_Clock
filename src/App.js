@@ -52,7 +52,7 @@ incrementBreak(){
 
 decrementSession(){
   if (this.state.sessionLength > 1 && !this.state.timerOn) {
-    this.setState(({sessionLength}) => ({
+    this.setState(({minutes, sessionLength}) => ({
       timeLeft: this.state.timeLeft - 1 * 60,
       sessionLength: sessionLength - 1
     }))
@@ -61,7 +61,7 @@ decrementSession(){
 
 incrementSession(){
   if (this.state.sessionLength < 60 && !this.state.timerOn) {
-    this.setState(({sessionLength}) => ({
+    this.setState(({minutes, sessionLength}) => ({
       timeLeft: this.state.timeLeft + 1 * 60,
       sessionLength: sessionLength + 1
     }))
@@ -77,7 +77,7 @@ decreaseTimer(){
 handleStart(){
   if (!this.state.timerOn){
     this.setState({
-      timerOn: true,
+      timerOn: !this.state.timerOn,
       timerInterval: setInterval(() => {
       this.decreaseTimer();
        this.phaseControl();
@@ -89,7 +89,7 @@ handleStart(){
     this.state.timerInterval && clearInterval (this.state.timerInterval);
 
     this.setState({
-      timerOn: false,
+      timerOn: !this.state.timerOn,
       timerInterval: null
     });
   }
@@ -102,7 +102,8 @@ phaseControl(){
     if (this.state.timerName === 'Session'){
       this.setState({
         timerName: 'Break',
-        timeLeft: this.state.breakLength * 60
+        timeLeft: this.state.breakLength * 60,
+        
       });
     } else {
       this.setState({
@@ -115,7 +116,7 @@ phaseControl(){
   
 
 resetCounter(){
-  this.audioBeep.current.pause();
+   this.audioBeep.current.pause();
    this.audioBeep.current.currentTime = 0;
    this.state.timerInterval && clearInterval(this.state.timerInterval);
   clearInterval (this.state.timerInterval);
@@ -127,7 +128,6 @@ resetCounter(){
       timerOn: false,
       timeLeft: Number.parseInt(25, 10) * 60
     });
-   
 };
 
 
@@ -167,7 +167,7 @@ return (
 
     {/* MAIN TIMER DISPLAY */}
     <div id="timer">
-       <div id="timerContent"> 
+      <div id="timerContent" >
         <label id="timer-label">{this.state.timerName}</label>
         <span id="time-left">{formatTime(this.state.timeLeft)}</span>
       </div>
@@ -186,7 +186,7 @@ return (
     </div>
     </div>
 
-    <audio id="beep" src="https://goo.gl/65cBl1" ref={this.audioBeep} />
+    <audio id="beep" src="http://dight310.byu.edu/media/audio/FreeLoops.com/1/1/Bongos%2001.wav-9261-Free-Loops.com.mp3" ref={this.audioBeep} />
 
     </div>
     );
